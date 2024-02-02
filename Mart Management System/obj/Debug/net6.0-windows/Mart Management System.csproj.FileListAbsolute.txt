@@ -1,0 +1,18 @@
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\bin\Debug\net6.0-windows\Mart Management System.exe
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\bin\Debug\net6.0-windows\Mart Management System.deps.json
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\bin\Debug\net6.0-windows\Mart Management System.runtimeconfig.json
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\bin\Debug\net6.0-windows\Mart Management System.dll
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\bin\Debug\net6.0-windows\Mart Management System.pdb
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart_Management_System.Form1.resources
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.csproj.GenerateResource.cache
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.AssemblyInfo.cs
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.dll
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\refint\Mart Management System.dll
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.pdb
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart Management System.genruntimeconfig.cache
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\ref\Mart Management System.dll
+C:\Users\ADMIN\Documents\Code\C#\Mart Management System\Mart Management System\obj\Debug\net6.0-windows\Mart_Management_System.Properties.Resources.resources
