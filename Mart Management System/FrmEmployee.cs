@@ -1,0 +1,386 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Linq;
+
+namespace Mart_Management_System
+{
+    public partial class FrmEmployee : Form
+    {
+
+        public FrmEmployee()
+        {
+            InitializeComponent();
+        }
+
+        string? fp;
+        SqlCommand? com;
+        Boolean? isNewClicked;
+        byte[]? photo;
+        SqlDataAdapter? da;
+        DataTable? dt;
+        Boolean? p;
+
+        private void FrmEmployee_Load(object sender, EventArgs e)
+        {
+            MyOperation.MyConnection();
+            MyOperation.OnOFFControl(this, false);
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            da = new SqlDataAdapter("SELECT * FROM  dbo.GetEmployee()", MyOperation.con);
+            dt = new DataTable();
+            da.Fill(dt);
+            dgvEmp.DataSource = dt;
+            dgvEmp.ColumnHeadersDefaultCellStyle.Font = new Font("Time New Roman", 12);
+            dgvEmp.DefaultCellStyle.Font = new Font("!Khmer OS Siemreap", 12);
+            dgvEmp.Columns["ID"].Width = 60;
+            dgvEmp.Columns["Khmer Name"].Width = 135;
+            dgvEmp.Columns["English Name"].Width = 135;
+            dgvEmp.Columns["Sex"].Width = 60;
+            dgvEmp.Columns["Date Of Birth"].Width = 135;
+            dgvEmp.Columns["Salary"].Width = 135;
+            dgvEmp.Columns["Position"].Width = 135;
+            dgvEmp.Columns["Contact"].Width = 135;
+            dgvEmp.Columns["Hired Date"].Width = 135;
+            dgvEmp.Columns["Photo"].Width = 100;
+            dgvEmp.Columns["Date Of Birth"].DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgvEmp.Columns["Salary"].DefaultCellStyle.Format = "c";
+            dgvEmp.Columns["Hired Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
+
+            // Photo
+            DataGridViewImageColumn img = new DataGridViewImageColumn();
+            img = (DataGridViewImageColumn)dgvEmp.Columns["Photo"];
+            img.ImageLayout = DataGridViewImageCellLayout.Stretch;
+
+            //Off sort
+            foreach (DataGridViewColumn col in dgvEmp.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+            dt.Dispose();
+            da.Dispose();
+
+        }
+
+        private void dtpDob_ValueChanged(object sender, EventArgs e)
+        {
+            dtpDob.CustomFormat = "dd/MM/yyyy";
+        }
+
+        private void dtpDob_Enter(object sender, EventArgs e)
+        {
+            SendKeys.Send("%{DOWN}");
+        }
+
+        private void dtpHire_ValueChanged(object sender, EventArgs e)
+        {
+            dtpHire.CustomFormat = "dd/MM/yyyy";
+        }
+
+        private void dtpHire_Enter(object sender, EventArgs e)
+        {
+            SendKeys.Send("%{DOWN}");
+        }
+
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            fd.Filter = "JPEG & PNG FILE|*.jpg;*.jpeg;*.png";
+            fd.Title = "Open an Image...";
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                fp = fd.FileName;
+                picEmp.Image = Image.FromFile(fp);
+            }
+        }
+
+        private void txtSalary_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            decimal x;
+            char ch = e.KeyChar;
+            if (ch == (char)8)
+            {
+                e.Handled = false;
+            }
+            else if (!char.IsDigit(ch) && (ch != '.' || !Decimal.TryParse(txtSalary.Text + ch, out x)))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtSalary_Leave(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtSalary.Text.Trim()))
+            {
+                txtSalary.Text = string.Format("{0:c}", decimal.Parse(txtSalary.Text));
+            }
+        }
+
+        private void txtSalary_Enter(object sender, EventArgs e)
+        {
+            decimal s;
+            if (!string.IsNullOrEmpty(txtSalary.Text.Trim()))
+            {
+                s = decimal.Parse(txtSalary.Text, NumberStyles.Currency);
+                txtSalary.Text = s.ToString();
+            }
+        }
+
+        private void txtContect_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char ch = e.KeyChar;
+            if (ch == (char)8)
+                e.Handled = false;
+            else if (!char.IsDigit(ch))
+                e.Handled = true;
+        }
+
+        private void txtSearch_KeyUp(object sender, KeyEventArgs e)
+        {
+            com = new SqlCommand("ProSearchEmployee", MyOperation.con);
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.AddWithValue("@s", txtSearch.Text);
+            da = new SqlDataAdapter();
+            da.SelectCommand = com;
+            dt = new DataTable();
+            da.Fill(dt);
+            dgvEmp.DataSource = dt;
+        }
+
+        private void Modify(string type)
+        {
+            com = new SqlCommand("ProEmployee", MyOperation.con);
+            com.CommandType = CommandType.StoredProcedure;
+            com.Parameters.Add(new SqlParameter("@Type", SqlDbType.VarChar)).Value = type;
+            com.Parameters.Add(new SqlParameter("@ID", SqlDbType.Char)).Value = txtEmpID.Text;
+            com.Parameters.Add(new SqlParameter("@KName", SqlDbType.NVarChar)).Value = txtEmpKhName.Text;
+            com.Parameters.Add(new SqlParameter("@EName", SqlDbType.VarChar)).Value = txtEmpEnName.Text;
+            if (rdoMale.Checked == true)
+                com.Parameters.Add(new SqlParameter("@Sex", SqlDbType.Char)).Value = "M";
+            else
+                com.Parameters.Add(new SqlParameter("@Sex", SqlDbType.Char)).Value = "F";
+            com.Parameters.Add(new SqlParameter("@DOB", SqlDbType.Date)).Value = dtpDob.Value;
+            com.Parameters.Add(new SqlParameter("@Address", SqlDbType.NVarChar)).Value = txtAddress.Text;
+            com.Parameters.Add(new SqlParameter("@Position", SqlDbType.VarChar)).Value = cboPosition.Text;
+            com.Parameters.Add(new SqlParameter("@Salary", SqlDbType.Money)).Value = txtSalary.Text;
+            com.Parameters.Add(new SqlParameter("@Phone", SqlDbType.VarChar)).Value = txtContect.Text;
+            if (fp != null)
+                photo = File.ReadAllBytes(fp);
+            com.Parameters.Add(new SqlParameter("@Photo", SqlDbType.VarBinary)).Value = photo;
+            com.Parameters.Add(new SqlParameter("@Hire", SqlDbType.Date)).Value = dtpHire.Value;
+            com.ExecuteNonQuery();
+            fp = null;
+            picEmp.Image = null;
+            MyOperation.ClearData(this);
+            p = false;
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            if (btnNew.Text == "New")
+            {
+                isNewClicked = true;
+                MyOperation.ClearData(this);
+                MyOperation.OnOFFControl(this, true);
+                btnNew.Text = "Cancel";
+                btnNew.Image = Mart_Management_System.Properties.Resources.exit_32px;
+                btnEdit.Enabled = false;
+                btnDelete.Enabled = false;
+                txtSearch.ForeColor = Color.Gray;
+                txtSearch.Text = "Search ID or Name here";
+            }
+            else
+            {
+                DialogResult re = MessageBox.Show("Do you want to cancel?", "Cancel", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (re == DialogResult.Yes)
+                {
+                    MyOperation.ClearData(this);
+                    MyOperation.OnOFFControl(this, false);
+                    btnNew.Text = "New";
+                    btnNew.Image = Mart_Management_System.Properties.Resources.new_copy_32px;
+                    txtSearch.ForeColor = Color.Gray;
+                    txtSearch.Text = "Search ID or Name here";
+                }
+            }
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtEmpID.Text.Trim()))
+            {
+                MessageBox.Show("Please enter ID", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmpID.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(txtEmpKhName.Text.Trim()))
+            {
+                MessageBox.Show("Please enter a Khmer name", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmpKhName.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(txtEmpEnName.Text.Trim()))
+            {
+                MessageBox.Show("Please enter a English name.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmpKhName.Focus();
+                return;
+            }
+            else if (rdoMale.Checked == false && rdoFemale.Checked == false)
+            {
+                MessageBox.Show("Please select a gender.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                rdoMale.Focus();
+                return;
+            }
+            else if (dtpDob.CustomFormat == " ")
+            {
+                MessageBox.Show("Please select a date of birth.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpDob.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(cboPosition.Text.Trim()))
+            {
+                MessageBox.Show("Please select a position.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cboPosition.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(txtSalary.Text.Trim()))
+            {
+                MessageBox.Show("Please enter salary.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSalary.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(txtAddress.Text.Trim()))
+            {
+                MessageBox.Show("Please enter an address.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtAddress.Focus();
+                return;
+            }
+            else if (dtpHire.CustomFormat == " ")
+            {
+                MessageBox.Show("Please enter a hire date.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpHire.Focus();
+                return;
+            }
+            else if (string.IsNullOrEmpty(txtContect.Text.Trim()))
+            {
+                MessageBox.Show("Please enter a phone number.", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtContect.Focus();
+                return;
+            }
+            else if (picEmp.Image == null)
+            {
+                MessageBox.Show("Please select an image..", "Messing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                btnBrowse_Click(sender, e);
+                return;
+            }
+            else
+            {
+                try
+                {
+                    if (isNewClicked == true)
+                    {
+                        Modify("insert");
+                        MessageBox.Show("You have successfully created.", "Save", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        Modify("update");
+                        MessageBox.Show("You have successfully updated.", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    btnNew.Image = Mart_Management_System.Properties.Resources.new_copy_32px;
+                    btnNew.Text = "New";
+                    LoadData();
+                    MyOperation.OnOFFControl(this, false);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message.Contains("Violation of PRIMARY KEY constraint"))
+                        MessageBox.Show("ID is already existed");
+                    else
+                        MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            isNewClicked = false;
+            MyOperation.OnOFFControl(this, true);
+            btnEdit.Enabled = false;
+            btnDelete.Enabled = false;
+            btnNew.Image = Mart_Management_System.Properties.Resources.exit_32px;
+            btnNew.Text = "Cancel";
+            txtEmpID.Enabled = false;
+            txtEmpKhName.Focus();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult re;
+            re = MessageBox.Show("Are you sure to Delete it?", "Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (re == DialogResult.Yes)
+            {
+                Modify("delete");
+                MessageBox.Show("You have successfully deleted.", "Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            picEmp.Image = null;
+            MyOperation.ClearData(this);
+            LoadData();
+
+        }
+
+        private void dgvEmp_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            int i;
+            if (dgvEmp.RowCount > 0)
+            {
+                i = e.RowIndex;
+                if (i < 0) return;
+                if (btnNew.Text == "Cancel" && btnSave.Enabled == true) return;
+
+                txtEmpID.Text = dgvEmp.Rows[i].Cells[0].Value.ToString();
+                txtEmpKhName.Text = dgvEmp.Rows[i].Cells[1].Value.ToString();
+                txtEmpEnName.Text = dgvEmp.Rows[i].Cells[2].Value.ToString();
+                if (dgvEmp.Rows[i].Cells[3].Value.ToString() == "M")
+                    rdoMale.Checked = true;
+                else
+                    rdoFemale.Checked = true;
+                dtpDob.CustomFormat = "dd/MM/yyyy";
+                dtpDob.Text = dgvEmp.Rows[i].Cells[4].Value.ToString();
+                cboPosition.Text = dgvEmp.Rows[i].Cells[5].Value.ToString();
+                txtSalary.Text = string.Format("{0:c}", dgvEmp.Rows[i].Cells[6].Value);
+                txtAddress.Text = dgvEmp.Rows[i].Cells[7].Value.ToString();
+                txtContect.Text = dgvEmp.Rows[i].Cells[8].Value.ToString();
+                dtpHire.CustomFormat = "dd/MM/yyyy";
+                dtpHire.Text = dgvEmp.Rows[i].Cells[9].Value.ToString();
+                
+                //read image from data grid view
+                photo = (byte[])dgvEmp.Rows[i].Cells[10].Value;
+                MemoryStream ms = new MemoryStream(photo);
+                picEmp.Image = Image.FromStream(ms);
+
+                if(MyOperation.EmpID.Equals(txtEmpID.Text.Trim()))
+                {
+                    btnEdit.Enabled = false;
+                    btnDelete.Enabled = false;
+                }
+                else
+                {
+                    btnEdit.Enabled = true;
+                    btnDelete.Enabled = true;
+                }
+                p = true;
+            }
+        }
+    }
+}
