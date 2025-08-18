@@ -49,7 +49,7 @@ EXEC('
 CREATE FUNCTION [dbo].[GetCustomer]()
 RETURNS TABLE AS RETURN
 (
-	SELECT CusID AS [Customer ID], CusKhName AS [Name in Khmer], CusEnName AS [Name is English], CusAdd AS [Customer Address], CusContact AS [Customer Contect] FROM tbCustomer
+	SELECT CusID AS [Customer ID], CusKhName AS [Name in Khmer], CusEnName AS [Name in English], CusAdd AS [Customer Address], CusContact AS [Customer Contect] FROM tbCustomer
 )
 ');
 END

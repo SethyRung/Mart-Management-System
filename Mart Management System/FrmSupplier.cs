@@ -52,7 +52,10 @@ namespace Mart_Management_System
             com = new SqlCommand("ProSupplier", MyOperation.con);
             com.CommandType = CommandType.StoredProcedure;
             com.Parameters.Add(new SqlParameter("@Type", SqlDbType.VarChar)).Value = type;
-            com.Parameters.Add(new SqlParameter("@SupID", SqlDbType.Char)).Value = txtSupID.Text;
+            if (type.Equals("insert"))
+                com.Parameters.Add(new SqlParameter("@SupID", SqlDbType.Int)).Value = txtSupID.Text.Replace("លេខសម្គាល់ដោយស្វ័យប្រវត្តិ", "0");
+            else
+                com.Parameters.Add(new SqlParameter("@SupID", SqlDbType.Char)).Value = txtSupID.Text;
             com.Parameters.Add(new SqlParameter("@Supplier", SqlDbType.NVarChar)).Value = txtSupplier.Text;
             com.Parameters.Add(new SqlParameter("@SupAddress", SqlDbType.NVarChar)).Value = txtSupAddress.Text;
             com.Parameters.Add(new SqlParameter("@SupContect", SqlDbType.NVarChar)).Value = txtSupContact.Text;
@@ -77,7 +80,9 @@ namespace Mart_Management_System
                 btnNew.Image = Mart_Management_System.Properties.Resources.exit_32px;
                 btnNew.Text = "Cancel";
                 MyOperation.ClearData(this);
-                txtSupID.Focus();
+                txtSupID.Enabled = false;
+                txtSupID.Text = "លេខសម្គាល់ដោយស្វ័យប្រវត្តិ";
+                txtSupplier.Focus();
             }
             else
             {
@@ -106,7 +111,7 @@ namespace Mart_Management_System
         private void btnSave_Click(object sender, EventArgs e)
         {
 
-            if (txtSupID.Text == null)
+            if (isNewClicked == false && txtSupID.Text == null)
             {
                 MessageBox.Show("Please enter supplier id.", "Missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtSupID.Focus();

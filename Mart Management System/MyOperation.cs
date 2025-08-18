@@ -12,7 +12,7 @@ namespace Mart_Management_System
         public static string EmpPositon;
         public static void MyConnection()
         {
-            string conStr = "Data Source = DESKTOP-VSTE6JK;Initial Catalog = MartDB;Integrated Security=True;";
+            string conStr = "Server=localhost,1433;Database=MartDB;User Id=sa;Password=Strong!Passw0rd;";
             try
             {
                 con = new SqlConnection(conStr);
@@ -87,7 +87,7 @@ namespace Mart_Management_System
         {
             SqlDataAdapter da;
             DataTable dt;
-            da = new SqlDataAdapter("SELECT " + value + "," + display + " FROM " + SqlTable, con);
+            da = new SqlDataAdapter($"SELECT {value}, {display} FROM {SqlTable}", con);
             dt = new DataTable();
             da.Fill(dt);
             combobox.DataSource = null;
