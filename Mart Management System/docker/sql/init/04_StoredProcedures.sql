@@ -28,7 +28,6 @@ EXEC('
 CREATE PROCEDURE [dbo].[ProCustomer]
 	(@Type varchar(20),
 	@CusID int,
-	@CusKhName nvarchar(max),
 	@CusEnName varchar(max),
 	@CusAddress nvarchar(max),
 	@CusContect nvarchar(max))
@@ -36,11 +35,10 @@ AS
 
 BEGIN
 	IF(@Type=''insert'')
-		INSERT INTO tbCustomer (CusKhName,CusEnName,CusAdd,CusContact) VALUES(@CusKhName, @CusEnName, @CusAddress, @CusContect)
+		INSERT INTO tbCustomer (CusEnName,CusAdd,CusContact) VALUES(@CusEnName, @CusAddress, @CusContect)
 	ELSE IF(@Type=''update'')
 		UPDATE tbCustomer
-		SET CusKhName = @CusKhName,
-			CusEnName = @CusEnName,
+		SET CusEnName = @CusEnName,
 			CusAdd = @CusAddress,
 			CusContact = @CusContect
 		WHERE CusID = @CusID
@@ -106,16 +104,13 @@ BEGIN
 
 	IF(@isNewSupplier = ''1'')
 		BEGIN
-			IF(EXISTS(SELECT Supplier FROM tbSupplier WHERE @supID = SupID))
-				THROW 60000,''Supplier ID already exists.'',1
-			ELSE
-				BEGIN
-					INSERT INTO tbSupplier(SupID, Supplier, SupAdd, SupContact)
-					SELECT supID, supplier, supAdd, supCon FROM @IM
+			BEGIN
+				INSERT INTO tbSupplier (Supplier, SupAdd, SupContact) VALUES(Supplier, SupAdd, SupContact)
+				SELECT supID, supplier, supAdd, supCon FROM @IM
 
-					INSERT INTO tbImport(ImpDate, SupID, Supplier, EmpID, EmpKhName, EmpEnName, ImpTotal)
-					SELECT impDate, supID, supplier, empID, empKhName, empEnName, amount FROM @IM
-				END
+				INSERT INTO tbImport(ImpDate, SupID, Supplier, EmpID, EmpKhName, EmpEnName, ImpTotal)
+				SELECT impDate, supID, supplier, empID, empKhName, empEnName, amount FROM @IM
+			END
 		END
 
 	ELSE
@@ -304,7 +299,7 @@ BEGIN
 EXEC('
 Create PROCEDURE [dbo].[ProSupplier]
 	(@Type varchar(20),
-	@SupID varchar(5),
+	@SupID int,
 	@Supplier nvarchar(max),
 	@SupAddress nvarchar(max),
 	@SupContect nvarchar(max))
@@ -312,7 +307,7 @@ AS
 
 BEGIN
 	IF(@Type=''insert'')
-		INSERT INTO tbSupplier VALUES(@SupID, @Supplier, @SupAddress, @SupContect)
+		INSERT INTO tbSupplier (Supplier, SupAdd, SupContact) VALUES(@Supplier, @SupAddress, @SupContect)
 	ELSE IF(@Type=''update'')
 		UPDATE tbSupplier
 		SET Supplier = @Supplier,

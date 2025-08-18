@@ -50,7 +50,7 @@ END;
 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'tbCategory')
 BEGIN
     CREATE TABLE [dbo].[tbCategory](
-        [CatID] [int] IDENTITY(1,1) NOT NULL,
+        [CatID] [varchar](5) NOT NULL,
 	    [Category] [nvarchar](max) NOT NULL,
         CONSTRAINT [pk_cat] PRIMARY KEY CLUSTERED ([CatID])
     );
@@ -77,7 +77,7 @@ BEGIN
 	    [ProQty] [int] NOT NULL,
 	    [UPIS] [money] NOT NULL,
 	    [SUP] [money] NOT NULL,
-	    [CatID] [int] NOT NULL,
+	    [CatID] [varchar](5) NOT NULL,
         CONSTRAINT [pk_pro] PRIMARY KEY CLUSTERED ([ProID])
     );
 END;

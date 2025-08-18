@@ -76,7 +76,7 @@ namespace Mart_Management_System
                 com.Dispose();
                 dtpSale.Focus();
                 SendKeys.Send("%{DOWN}");
-                MyOperation.FillCbo(cboCus, "CusID", "CusName", "tbCustomer");
+                MyOperation.FillCbo(cboCus, "CusID", "CusENName", "tbCustomer");
                 cboCus.Text = null;
                 MyOperation.FillCbo(cboCate, "CatID", "Category", "tbCategory");
                 cboCate.Text = null;
@@ -119,7 +119,7 @@ namespace Mart_Management_System
         private void cboCus_SelectionChangeCommitted(object sender, EventArgs e)
         {
             cusID = cboCus.SelectedValue.ToString();
-            com = new SqlCommand("SELECT CusID, CusAdd, CusContact FROM tbCustomer WHERE CusID='" + cusID + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT CusID, CusAdd, CusContact FROM tbCustomer WHERE CusID='{cusID}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             while (dr.Read())
             {
@@ -134,7 +134,7 @@ namespace Mart_Management_System
         private void cboPro_SelectionChangeCommitted(object sender, EventArgs e)
         {
             txtProID.Text = cboPro.SelectedValue.ToString();
-            com = new SqlCommand("SELECT CatID,SUP FROM tbProduct WHERE ProID='" + txtProID.Text + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT CatID, SUP FROM tbProduct WHERE ProID='{txtProID.Text}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             while (dr.Read())
             {
@@ -147,7 +147,7 @@ namespace Mart_Management_System
 
         private void txtProID_TextChanged(object sender, EventArgs e)
         {
-            com = new SqlCommand("SELECT CatID, ProID, SUP FROM tbProduct WHERE ProID='" + txtProID.Text + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT CatID, ProID, SUP FROM tbProduct WHERE ProID='{txtProID.Text}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             if (dr.HasRows)
             {
@@ -315,12 +315,12 @@ namespace Mart_Management_System
             if (btnNewCus.Text == "New Customer")
             {
                 cboCus.DropDownStyle = ComboBoxStyle.Simple;
-                txtCusID.Text = null;
+                txtCusID.Enabled = false;
+                txtCusID.Text = "លេខសម្គាល់ដោយស្វ័យប្រវត្តិ";
                 cboCus.Text = null;
                 txtCusAddress.Text = null;
                 txtCusCon.Text = null;
-                txtCusID.Focus();
-                txtCusID.Enabled = true;
+                cboCus.Focus();
                 txtCusCon.Enabled = true;
                 txtCusAddress.Enabled = true;
                 btnNewCus.Text = "Old Customer";

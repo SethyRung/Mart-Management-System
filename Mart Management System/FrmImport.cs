@@ -117,7 +117,7 @@ namespace Mart_Management_System
         private void cboSup_SelectionChangeCommitted(object sender, EventArgs e)
         {
             supID = cboSup.SelectedValue.ToString();
-            com = new SqlCommand("SELECT SupID, SupAdd, SupContact FROM tbSupplier WHERE SupID='" + supID + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT SupID, SupAdd, SupContact FROM tbSupplier WHERE SupID='{supID}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             while (dr.Read())
             {
@@ -132,7 +132,7 @@ namespace Mart_Management_System
         private void cboPro_SelectionChangeCommitted(object sender, EventArgs e)
         {
             txtProID.Text = cboPro.SelectedValue.ToString();
-            com = new SqlCommand("SELECT CatID FROM tbProduct WHERE ProID='" + txtProID.Text + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT CatID FROM tbProduct WHERE ProID='{txtProID.Text}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             while (dr.Read())
             {
@@ -144,7 +144,7 @@ namespace Mart_Management_System
 
         private void txtProID_TextChanged(object sender, EventArgs e)
         {
-            com = new SqlCommand("SELECT CatID, ProID FROM tbProduct WHERE ProID='" + txtProID.Text + "'", MyOperation.con);
+            com = new SqlCommand($"SELECT CatID, ProID FROM tbProduct WHERE ProID='{txtProID.Text}'", MyOperation.con);
             SqlDataReader dr = com.ExecuteReader();
             if (dr.HasRows)
             {
@@ -325,15 +325,16 @@ namespace Mart_Management_System
             if (btnNewSup.Text == "New Supplier")
             {
                 cboSup.DropDownStyle = ComboBoxStyle.Simple;
-                txtSupID.Text = null;
+                txtSupID.Enabled = false;
+                txtSupID.Text = "លេខសម្គាល់ដោយស្វ័យប្រវត្តិ";
                 cboSup.Text = null;
                 txtSupAddress.Text = null;
                 txtSupCon.Text = null;
-                txtSupID.Focus();
-                txtSupID.Enabled = true;
+                cboSup.Focus();
                 txtSupCon.Enabled = true;
                 txtSupAddress.Enabled = true;
                 btnNewSup.Text = "Old Supplier";
+
             }
             else
             {

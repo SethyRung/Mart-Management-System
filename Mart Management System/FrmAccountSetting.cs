@@ -41,7 +41,6 @@ namespace Mart_Management_System
             dgvUser.Columns["EmpEnName"].Width = 175;
             dgvUser.Columns["EmpPos"].Width = 175;
             dgvUser.Columns["EmpUserName"].Width = 175;
-            dgvUser.Columns["EmpPassword"].Width = 175;
             
             foreach (DataGridViewColumn col in dgvUser.Columns)
             {

@@ -32,10 +32,11 @@ namespace Mart_Management_System
             dgvCus.DataSource = dt;
             dgvCus.ColumnHeadersDefaultCellStyle.Font = new Font("Time New Roman", 12);
             dgvCus.DefaultCellStyle.Font = new Font("!Khmer OS Siemreap", 12);
-            dgvCus.Columns["ID"].Width = 201;
-            dgvCus.Columns["Name"].Width = 301;
-            dgvCus.Columns["Address"].Width = 301;
-            dgvCus.Columns["Contect"].Width = 302;
+            dgvCus.Columns["Customer ID"].Width = 201;
+            dgvCus.Columns["Name in Khmer"].Width = 301;
+            dgvCus.Columns["Name in English"].Width = 301;
+            dgvCus.Columns["Customer Address"].Width = 301;
+            dgvCus.Columns["Customer Contect"].Width = 302;
 
             //Off sort
             foreach (DataGridViewColumn col in dgvCus.Columns)
@@ -56,7 +57,7 @@ namespace Mart_Management_System
                 com.Parameters.Add(new SqlParameter("@CusID", SqlDbType.Int)).Value = txtCusID.Text.Replace("លេខសម្គាល់ដោយស្វ័យប្រវត្តិ", "0");
             else
                 com.Parameters.Add(new SqlParameter("@CusID", SqlDbType.Int)).Value = txtCusID.Text;
-            com.Parameters.Add(new SqlParameter("@CusName", SqlDbType.NVarChar)).Value = txtCusName.Text;
+            com.Parameters.Add(new SqlParameter("@CusEnName", SqlDbType.NVarChar)).Value = txtCusName.Text;
             com.Parameters.Add(new SqlParameter("@CusAddress", SqlDbType.NVarChar)).Value = txtAddress.Text;
             com.Parameters.Add(new SqlParameter("@CusContect", SqlDbType.NVarChar)).Value = txtContect.Text;
             com.ExecuteNonQuery();
