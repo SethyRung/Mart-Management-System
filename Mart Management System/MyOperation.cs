@@ -12,7 +12,7 @@ namespace Mart_Management_System
         public static string EmpPositon;
         public static void MyConnection()
         {
-            string conStr = "Data Source = localhost\\SQLEXPRESS;Initial Catalog = MartDB;Integrated Security=True;";
+            string conStr = "Data Source = DESKTOP-VSTE6JK;Initial Catalog = MartDB;Integrated Security=True;";
             try
             {
                 con = new SqlConnection(conStr);

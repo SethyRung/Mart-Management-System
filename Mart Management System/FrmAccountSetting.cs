@@ -94,7 +94,7 @@ namespace Mart_Management_System
                 if (btnNew.Text == "Cancel" && btnSave.Enabled == true) return;
 
                 eid = dgvUser.Rows[i].Cells[0].Value.ToString();
-                da = new SqlDataAdapter($"SELECT tbEmployee.EmpID, EmpEnName FROM tbEmployee INNER JOIN tbUser ON tbEmployee.EmpID = tbUser.EmpID WHERE tbEmployee.EmpID = {eid}", MyOperation.con);
+                da = new SqlDataAdapter($"SELECT tbEmployee.EmpID, EmpEnName FROM tbEmployee INNER JOIN tbUser ON tbEmployee.EmpID = tbUser.EmpID WHERE tbEmployee.EmpID = '{eid}'", MyOperation.con);
                 dt = new DataTable();
                 da.Fill(dt);
 

@@ -1,0 +1,5 @@
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'MartDB')
+BEGIN
+    CREATE DATABASE MartDB;
+END
+GO

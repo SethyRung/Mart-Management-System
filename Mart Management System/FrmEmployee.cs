@@ -363,13 +363,17 @@ namespace Mart_Management_System
                 txtContect.Text = dgvEmp.Rows[i].Cells[8].Value.ToString();
                 dtpHire.CustomFormat = "dd/MM/yyyy";
                 dtpHire.Text = dgvEmp.Rows[i].Cells[9].Value.ToString();
-                
-                //read image from data grid view
-                photo = (byte[])dgvEmp.Rows[i].Cells[10].Value;
-                MemoryStream ms = new MemoryStream(photo);
-                picEmp.Image = Image.FromStream(ms);
 
-                if(MyOperation.EmpID.Equals(txtEmpID.Text.Trim()))
+                photo = (byte[])dgvEmp.Rows[i].Cells[10].Value;
+
+                // Check if the byte array is null or has a length of 0
+                if (photo != null && photo.Length > 0)
+                {
+                    MemoryStream ms = new MemoryStream(photo);
+                    picEmp.Image = Image.FromStream(ms);
+                }
+
+                if (MyOperation.EmpID.Equals(txtEmpID.Text.Trim()))
                 {
                     btnEdit.Enabled = false;
                     btnDelete.Enabled = false;

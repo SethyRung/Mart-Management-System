@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  db:
+    build: ./docker/sql
+    container_name: mart-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Strong!Passw0rd"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+volumes:
+  sql_data:

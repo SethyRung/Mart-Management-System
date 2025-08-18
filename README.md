@@ -1,84 +1,119 @@
-# Mart Management System
+# 🛒 Mart Management System
 
-A desktop application for managing mart operations such as products, customers, suppliers, sales, and stock.  
-Built with **C#** and **Microsoft SQL Server** for small to medium-sized retail businesses.
-
----
-
-## 📌 Features
-
-- **Product Management** – Add, update, delete, and search products.
-- **Supplier Management** – Keep track of suppliers and their products.
-- **Customer Management** – Manage customer records.
-- **Inventory Control** – Monitor stock levels and prevent shortages.
-- **Sales Processing** – Create and manage sales transactions.
-- **Reporting** – Generate business and sales reports.
-- **Database Stored Procedures** – Improve performance with pre-built SQL logic.
+A management system built with **C#** and **.NET 6 Core**, using **SQL Server 2019** as the database.  
+This project helps manage products, customers, and business operations with tables, stored procedures, and functions.
 
 ---
 
-## 🛠 Tech Stack
+## 🚀 Features
 
-- **Language**: C#
-- **Framework**: .NET Framework / WinForms (adjust if WPF or other)
-- **Database**: Microsoft SQL Server
-- **Database Script**: `script.sql` (contains tables, relationships, stored procedures)
-
----
-
-## ⚙️ Installation & Setup
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/SethyRung/Mart-Management-System.git
-   ```
-
-2. **Set Up the Database**
-
-   - Open **SQL Server Management Studio (SSMS)**.
-   - Create a new database:
-
-     ```sql
-     CREATE DATABASE MartDB;
-     ```
-
-   - Open the `script.sql` file from this repo in SSMS.
-   - Execute the script to create all tables, relationships, and stored procedures.
-
-3. **Configure the Application**
-
-   - Open the solution in **Visual Studio**.
-   - Update the database connection string in the application configuration file (e.g., `App.config` or `Settings.settings`) to match your SQL Server instance.
-
-4. **Run the Application**
-   - Build and run the project in Visual Studio.
-   - Log in with the default admin credentials (if applicable).
+- Manage **Products** and **Customers**
+- Predefined **Stored Procedures** and **Functions**
+- Easy setup with **Docker Compose**
+- Automatic database initialization (tables, procs, functions)
 
 ---
 
-## 🤝 Contributing
+## 📦 Prerequisites
 
-1. Fork the repository.
-2. Create a new branch:
+Before running the project, make sure you have installed:
 
-   ```bash
-   git checkout -b feature-name
-   ```
+- [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- (Optional) [SQL Server Management Studio (SSMS)](https://aka.ms/ssmsfullsetup) for database inspection
 
-3. Make your changes and commit:
+---
 
-   ```bash
-   git commit -m "Add new feature"
-   ```
+## ⚡ Getting Started
 
-4. Push the branch:
+### 1️⃣ Clone the repository
 
-   ```bash
-   git push origin feature-name
-   ```
+```bash
+git clone https://github.com/SethyRung/Mart-Management-System.git
+cd Mart-Management-System
+```
 
-5. Open a Pull Request.
+### 2️⃣ Run SQL Server with Docker
+
+We use **Docker Compose** to run SQL Server and initialize the database automatically.
+
+```bash
+docker-compose up -d --build
+```
+
+- SQL Server will run on `localhost:1433`
+- User: `sa`
+- Password: `Strong!Passw0rd`
+- Database: `MartDB`
+
+📂 Initialization scripts are in `docker/sql/init/`:
+
+- `1_Tables.sql` → creates tables
+- `2_Types.sql` → creates types
+- `3_StoredProcedures.sql` → creates stored procedures
+- `4_Functions.sql` → creates functions
+- `5_SeedData.sql` → seeding default user
+
+---
+
+### 3️⃣ Run the Application in Visual Studio
+
+1. Open **Visual Studio 2022** (or later).
+2. Go to **File → Open → Project/Solution**.
+3. Select `Mart-Management-System.sln`.
+4. Make sure the startup project is set to **Mart-Management-System**.
+5. Press **F5** (Run with Debugging) or **Ctrl + F5** (Run without Debugging).
+
+The app will connect to SQL Server automatically using the connection string in **`MyOperation.cs`**:
+
+```cs
+string conStr = "Server=localhost,1433;Database=MartDB;User Id=sa;Password=Strong!Passw0rd;"
+```
+
+Note: 
+  - User: **admin**
+  - Password: **admin**
+
+---
+
+### 4️⃣ Verify Database Setup
+
+Open **SSMS** and connect with:
+
+- Server: `localhost,1433`
+- User: `sa`
+- Password: `Strong!Passw0rd`
+
+You should see:
+
+- ✅ Tables
+- ✅ Stored Procedures
+- ✅ Functions
+- ✅ Types
+
+---
+
+## 🛠️ Development Workflow
+
+- Add new tables/functions → put SQL in `docker/sql/init/`
+- Restart container to apply changes:
+
+  ```bash
+  docker-compose down
+  docker-compose up -d --build
+  ```
+
+- Update `.NET` code as needed and run with `dotnet run`
+
+---
+
+## 🤝 Contribution
+
+1. Fork the repo
+2. Create your feature branch: `git checkout -b feature/YourFeature`
+3. Commit your changes: `git commit -m "feat: add new feature"`
+4. Push to the branch: `git push origin feature/YourFeature`
+5. Open a Pull Request
 
 ---
 
