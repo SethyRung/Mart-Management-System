@@ -28,3 +28,30 @@ CREATE TYPE [dbo].[ImportMaster] AS TABLE(
   )
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name = 'ImportMaster')
+BEGIN
+CREATE TYPE [dbo].[SaleMaster] AS TABLE(
+	[saleDate] [datetime] NOT NULL,
+	[cusID] [int] NOT NULL,
+	[cusName] [nvarchar](max) NOT NULL,
+	[cusAdd] [nvarchar](max) NOT NULL,
+	[cusCon] [varchar](12) NOT NULL,
+	[empID] [char](5) NOT NULL,
+	[empKhName] [nvarchar](max) NOT NULL,
+	[empEnName] [varchar](max) NOT NULL,
+	[amount] [money] NOT NULL
+)
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name = 'ImportMaster')
+BEGIN
+CREATE TYPE [dbo].[SaleDetail] AS TABLE(
+	[proID] [varchar](13) NOT NULL,
+	[proName] [nvarchar](max) NOT NULL,
+	[qty] [int] NOT NULL,
+	[sup] [money] NOT NULL,
+	[catID] [varchar](5) NOT NULL
+)
+GO

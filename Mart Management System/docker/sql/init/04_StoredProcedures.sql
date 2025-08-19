@@ -347,3 +347,70 @@ END
 ');
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'ProSale')
+BEGIN
+EXEC('
+CREATE PROCEDURE [dbo].[ProSale](@isNewCustomer char, @SM as SaleMaster READONLY, @SD as SaleDetail READONLY)
+AS
+BEGIN
+	DECLARE @cusID INT 
+	DECLARE @saleID INT
+
+	SELECT @cusID = cusID FROM @SM
+
+	IF(@isNewCustomer = '1')
+		BEGIN
+			INSERT INTO tbCustomer(CusEnName, CusAdd, CusContact)
+				SELECT cusName, cusAdd, cusCon FROM @SM
+			
+			SELECT @cusID=MAX(CusID) FROM tbCustomer
+
+			INSERT INTO tbSale(SaleDate, CusID, CusEnName, EmpID, EmpKhName, EmpEnName, SaleTotal)
+				SELECT saleDate, cusID, cusName, empID, empKhName, empEnName, amount FROM @SM
+		END
+
+	ELSE
+		BEGIN
+			INSERT INTO tbSale(SaleDate, CusID, CusEnName, EmpID, EmpKhName, EmpEnName, SaleTotal)
+				SELECT saleDate, cusID, cusName, empID, empKhName, empEnName, amount FROM @SM
+		END
+
+	SELECT @saleID = MAX(SaleID) FROM tbSale
+
+	DECLARE @proID VARCHAR(13)
+	DECLARE @proName NVARCHAR(MAX)
+	DECLARE @qty INT
+	DECLARE @qtyInStock INT
+	DECLARE @sup MONEY
+	DECLARE @catID varchar(5)
+
+	DECLARE csDetail CURSOR SCROLL DYNAMIC
+	FOR SELECT * FROM @SD
+
+	OPEN csDetail
+
+	FETCH FIRST FROM csDetail INTO @proID, @proName, @qty, @sup, @catID
+	WHILE(@@FETCH_STATUS=0)
+		BEGIN
+			IF((SELECT COUNT(proID) FROM tbProduct WHERE proID=@proID)=0)
+				THROW 60001,'We do not have this product in stock',1
+			ELSE
+				BEGIN
+					SELECT @qtyInStock=ProQty FROM tbProduct
+					IF((@qtyInStock-@qty)<0)
+						THROW 60001,'Not enoust product in stock',1
+					ELSE
+						UPDATE tbProduct 
+						SET ProQty=ProQty-@qty
+						WHERE ProID=@proID
+				END
+			INSERT INTO tbSaleDetail
+			VALUES(@proID, @proName, @saleID, @qty, @sup, @sup*@qty)
+			
+			FETCH NEXT FROM csDetail INTO @proID, @proName, @qty, @sup, @catID
+		END
+END
+');
+END
+GO

@@ -26,7 +26,7 @@ IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'tbCus
 BEGIN
     CREATE TABLE [dbo].[tbCustomer](
         [CusID] [int] IDENTITY(1,1) NOT NULL,
-	    [CusKhName] [nvarchar](max) NOT NULL,
+	    [CusKhName] [nvarchar](max) NULL,
 	    [CusEnName] [varchar](max) NOT NULL,
 	    [CusAdd] [nvarchar](max) NOT NULL,
 	    [CusContact] [varchar](12) NOT NULL,
